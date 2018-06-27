@@ -18,7 +18,21 @@ Style/UnneededPercentQ:
   Enabled: false
 Style/GuardClause:
   Enabled: false
+Style/IfUnlessModifier:
+  Enabled: false
+Style/UnlessElse:
+  Enabled: false
+Style/SymbolArray:
+  Enabled: false
+Style/Documentation:
+  Enabled: false
 
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: comma
+
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
 Layout/SpaceBeforeBlockBraces:
   Enabled: false
 Layout/SpaceInsideBlockBraces:
@@ -27,6 +41,16 @@ Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 Layout/EmptyLinesAroundClassBody:
   Enabled: false
+Layout/EmptyLines:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+Metrics/AbcSize:
+  Enabled: false
 Metrics/LineLength:
-  Enabled: true
+  Enabled: false
   Max: 160
+
+Bundler/OrderedGems:
+  Enabled: false
