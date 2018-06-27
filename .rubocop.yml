@@ -1,0 +1,32 @@
+AllCops:
+  TargetRubyVersion: 2.4
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+  # Exclude:
+  #   - 'db/schema.rb'
+  #   - 'db/migrate/*.rb'
+
+Style/RedundantReturn:
+  Enabled: false
+Style/HashSyntax:
+  Enabled: false
+Style/UnneededPercentQ:
+  Enabled: false
+Style/GuardClause:
+  Enabled: false
+
+Layout/SpaceBeforeBlockBraces:
+  Enabled: false
+Layout/SpaceInsideBlockBraces:
+  Enabled: false
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+Metrics/LineLength:
+  Enabled: true
+  Max: 160
