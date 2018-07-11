@@ -227,12 +227,12 @@ namespace :docker do
     end
   end
 
-  desc 'Build the docker container image'
+  desc 'Build the docker image'
   task :build do
     invoke 'docker:build_decision'
   end
 
-  desc 'Build and then push docker container image'
+  desc 'Build and push docker image'
   task :build_push do
     invoke 'docker:build'
     invoke 'docker:push'

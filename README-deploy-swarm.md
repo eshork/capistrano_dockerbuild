@@ -1,7 +1,24 @@
-    This content is specific to deployments using Docker Swarm; if you haven't yet reviewed README.md, you should probably start there.
+_This content is specific to deployments using Docker Swarm; if you haven't yet reviewed README.md, you should probably start there._
 
 # docker:swarm
 
+This deploy strategy copies a docker-compose.yml file to the docker swarms you specify, and then runs `docker stack up` across the whole lot.
+
+Deploying to a single swarm member should be enough to deploy across the entire swarm, so choosing one deploy host per swarm is probably the best course of action.
+
+### Roles:
+
+This plugin adds the `docker_swarm` role, identifying hosts where the `docker_compose_file` should be copied and ran.
+
+If the `docker_build` role is defined, it will identify the source of the `docker_compose_file`, otherwise the current project directory is the source.
+
+```ruby
+# using server syntax
+server 'my.swarm.host', roles: %w{docker_swarm}
+
+# or using role syntax
+role :docker_swarm,  %w{my.swarm.host}
+```
 
 
 
@@ -15,16 +32,4 @@ set :docker_stack_deploy_opts, '--prune'                         # args for `doc
 set :docker_compose_path -> { deploy_path }                      # path on remote hosts for docker_compose_file deployments
 
 set :dockerswarm_deployhook, true                                # set false to skip default deploy hook; default is true
-```
-
-----
-
-```ruby
-set :docker_compose_project -> { fetch(:application) }        # (required) name of the docker-compose project
-set :docker_compose_file, 'docker-compose.yml'                # name of compose file to use for deploy
-set :docker_compose_cmd, 'docker-compose'                     # name/path to `docker-compose` command on host
-set :docker_compose_opts, nil                                 # general args for `docker-compose`; default is none; (ex: '--project-name myproject --tls')
-set :docker_compose_up_opts, '-d --no-build --remove-orphans' # args for `docker-compose up` command; these are the defaults
-set :docker_compose_stop_opts, nil                            # args for `docker-compose stop` command; default is none; (ex: '--timeout 20')
-set :dockercompose_deployhook, true                           # set false to skip default deploy hook; default is true
 ```

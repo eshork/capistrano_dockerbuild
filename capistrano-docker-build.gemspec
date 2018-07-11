@@ -11,7 +11,9 @@ Gem::Specification.new do |spec|
   spec.email         = ['eric.shorkey@gmail.com']
 
   spec.summary       = 'docker build/push plugin for Capistrano'
-  spec.description   = 'Build, push and deploy your Docker container images as part of your Capistrano workflow. Pretty simple.'
+  spec.description   = 'Build, push, promote, and deploy Docker container images with Capistrano.' \
+                       ' Build images locally or from a build server, rebuild or promote images across deployment environments.' \
+                       ' Deployments for docker-compose and docker swarm.'
   spec.homepage      = 'https://github.com/eshork/capistrano_dockerbuild'
   spec.license       = 'MIT'
 

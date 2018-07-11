@@ -1,4 +1,4 @@
-    This content is specific to deployments using docker-compose; if you haven't yet reviewed README.md, you should probably start there.
+_This content is specific to deployments using docker-compose; if you haven't yet reviewed README.md, you should probably start there._
 
 # docker:compose
 
@@ -11,16 +11,16 @@ There is no blue/green, rolling update, auto rollback on failure, or anything ev
 
 ### Roles:
 
-This gem adds the `docker_compose` role, identifying hosts where the docker_compose_file should be copied and ran.
+This plugin adds the `docker_compose` role, identifying hosts where the docker_compose_file should be copied and ran.
 
-If the `docker_build` role is defined, it will identify the source of the docker_compose_file
+If the `docker_build` role is defined, it will identify the source of the docker_compose_file, otherwise the current project directory is the source.
 
 ```ruby
-# using the `server` command
+# using server syntax
 server 'my.remote.server', roles: %w{docker_compose}
 server 'my_other.remote.server', roles: %w{docker_compose}
 
-# or using the `role` command
+# or using role syntax
 role :docker_compose,  %w{localhost} # places localhost within the docker_compose role
 
 # The docker_build role is used to identify the source of the docker_compose_file
