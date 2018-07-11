@@ -4,16 +4,16 @@ module Capistrano
   module DSL
     module Paths
 
-      def build_from
-        fetch(:build_from)
+      def build_dir
+        fetch(:build_dir)
       end
 
       # directory within which the build is to be executed
       # respects relative paths (not starting with /)
       def build_path
-        return deploy_path.join(fetch(:current_directory, 'current')) if build_from.nil?
-        return Pathname.new(build_from.strip) if build_from.strip[0] == '/'
-        return deploy_path.join(fetch(:current_directory, 'current'), build_from)
+        return deploy_path.join(fetch(:current_directory, 'current')) if build_dir.nil?
+        return Pathname.new(build_dir.strip) if build_dir.strip[0] == '/'
+        return deploy_path.join(fetch(:current_directory, 'current'), build_dir)
       end
 
     end

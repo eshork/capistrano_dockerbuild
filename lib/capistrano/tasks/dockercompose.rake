@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'byebug'
 require 'tempfile'
 
 namespace :docker do
@@ -94,7 +93,6 @@ namespace :docker do
               download! docker_compose_path.join(docker_compose_file), tmp_file_path
             end
           else
-            # byebug
             invoke 'docker:compose:local_source_warning'
             run_locally do
               warn "fetching #{docker_compose_file}"

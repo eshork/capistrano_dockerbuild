@@ -44,6 +44,10 @@ Layout/EmptyLinesAroundClassBody:
 Layout/EmptyLines:
   Enabled: false
 
+Metrics/PerceivedComplexity:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
 Metrics/BlockLength:
   Enabled: false
 Metrics/AbcSize:

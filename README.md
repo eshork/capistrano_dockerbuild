@@ -1,9 +1,9 @@
 # capistrano_dockerbuild
 
-Docker image creation, tagging, and repository tasks (and a few optional deployment schemes) for Capistrano v3
+Docker image creation, tagging, and repository tasks for Capistrano v3
 
 ```sh
-cap production docker:build_push # build image and then push to repository
+cap production docker:deploy # build or promote image and push to repository
 ```
 
 This plugin also hooks into the default `cap <environment> deploy` flow as a build action. See [Usage](#usage) for more details.
@@ -47,7 +47,7 @@ role :docker_build,  %w{localhost} # role syntax, making localhost the build age
 server 'my.build.server', roles: %w{docker_build} # server syntax, declaring a remote server
 ```
 
-If no `:docker_build` host is defined, the docker image will be built directly from the current working project directory. A maximum of one `:docker_build` host can be defined; any additional should raise an error.
+If no `:docker_build` host is defined, the docker image will be built directly from the current working project directory. A maximum of one `:docker_build` host can be defined.
 
 #### Run a deploy:
 
@@ -74,27 +74,37 @@ Run `cap -T docker:` for details
 ```ruby
 set :docker_build_image -> { fetch(:application) } # (required) name of the image
 set :docker_build_opts, nil                        # additional `docker build` args; default is none; (ex: '--pull --no-cache --force-rm')
-set :docker_build_tag, 'latest'                    # specific tag name for this build; you can change this and 'latest' tag will still be applied
+set :docker_build_custom_tag, nil                  # custom tag name for this build, if any
+set :docker_build_image_latest_tag?, true          # generates a 'latest' tag when true
+set :docker_build_image_release_tag?, true         # generates a release tag when true
+set :docker_build_image_revision_tag?, true        # generates a scm revision tag when true
+set :docker_build_image_shortrev_tag?, true        # generates a short-form scm revision tag when true
 set :docker_repo_url, nil                          # name/url of remote docker image repository for push
-set :docker_build_context, '.'                     # context passed to `docker build` (within :build_from)
+set :docker_build_context, '.'                     # context passed to `docker build` (from :build_dir)
 set :dockerfile, 'Dockerfile'                      # name of Dockerfile to use for build
 set :docker_cmd, 'docker'                          # name/path to `docker` command on build host
-set :build_from, '.'                               # directory within source repo to run build from
+set :build_dir, '.'                                # directory within source repository to run builds from on remote build hosts
+set :docker_build_promote_image, nil               # repository/image:tag to promote instead of building a new image
 set :dockerbuild_deployhook, true                  # set false to skip default deploy hook; default is true
 set :dockerbuild_trim_release_roles, true          # set false to prevent no_release from being auto-added to all non docker_build servers
 ```
 
-### Created Docker image tags
-Under most use cases the `docker:build` task creates several image tags on the build host upon completion, all pointing to the same image SHA. By default, all of these tags are also pushed up to the docker image repository during the `docker:push` task. You may not want your repository (or build host) filled with a ton of tags, so this gem offers a few ways to control that sprawl.
+### Created docker image tags
 
-  docker_build_image_latest_tag,
-  docker_build_image_revision_tag,
-  docker_build_image_shortrev_tag,
-  docker_build_image_release_tag,
-  docker_build_image_tag,
+By default the `docker:build` task creates several image tags on the build host upon completion, all pointing to the same final image. Unless otherwise altered, all created tags are also pushed up to the docker image repository during the `docker:push` task. You may not want your repository (or build host) filled with a ton of tags, so this gem offers a few ways to control that sprawl.
+
+You can selectively turn off remotely pushed tags by setting these to `false`, as desired:
+
+- `:docker_build_image_latest_tag?`
+- `:docker_build_image_release_tag?`
+- `:docker_build_image_revision_tag?`
+- `:docker_build_image_shortrev_tag?`
+
+`:docker_build_custom_tag` is optional; if you don't want a custom tag created, don't set one.
+
 
 ### Deployment to docker-compose, Docker Swarm, Kubernetes, Marathon, etc
-The primary purpose of this gem is currently to provide tasks for Docker image creation and repository push/transfer. However, some basic deployment tasks are included as optionals, should you decide to use them. Each deploy strategy needs to be specifically enabled by a separate `requires` statement within your Capfile.
+The primary goal of this gem is currently to provide tasks for Docker image creation and repository push/transfer. However, some deployment tasks are also included, should you decide to use them. Each deploy strategy needs to be specifically enabled by a separate `requires` statement within your Capfile.
 
 Refer to the specific deployment documentation for details:
 
@@ -104,6 +114,8 @@ Refer to the specific deployment documentation for details:
 ## Why?
 
 Because.
+
+There are at least a dozen other Capistrano + Docker gems out there, but none seemed to match my preferred docker philosophy: Docker images should be built once and then promoted up to higher environments as they pass acceptance tests. This gem aims to provide that type of workflow.
 
 ## Development
 
