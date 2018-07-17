@@ -18,7 +18,7 @@ namespace :docker do
     end
 
     def docker_compose_up_opts
-      fetch(:docker_compose_up_opts, '--no-build --remove-orphans')
+      fetch(:docker_compose_up_opts, '-d --no-build --remove-orphans')
     end
 
     def docker_compose_stop_opts
