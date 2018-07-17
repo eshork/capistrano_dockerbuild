@@ -168,8 +168,8 @@ namespace :docker do
     promote_image_tag = fetch(:docker_build_promote_image, nil)
     image_name = DockerImage.from_str(promote_image_tag)
     image_name = DockerImage.new(image_name.repo ? image_name.repo : docker_repo_url,
-                           image_name.name ? image_name.name : docker_build_image,
-                           image_name.tag ? image_name.tag : docker_build_tag)
+                                 image_name.name ? image_name.name : docker_build_image,
+                                 image_name.tag ? image_name.tag : docker_build_tag)
     promote_tag = image_name.to_s
     return promote_tag
   end
@@ -253,19 +253,33 @@ namespace :docker do
   task :set_current_revision => 'deploy:set_current_revision'
 
   task :get_docker_build_image_id => :set_current_revision do
-
-    run_locally do
-      docker_build_image_tags.each do |image_tag|
-        docker_build_image_id = capture docker_cmd, :image, :ls, '-q', image_tag
-        unless docker_build_image_id.empty?
-          set(:docker_build_image_id, docker_build_image_id)
-          break
+    if roles(:docker_build).empty?
+      run_locally do
+        docker_build_image_tags.each do |image_tag|
+          docker_build_image_id = capture docker_cmd, :image, :ls, '-q', image_tag
+          unless docker_build_image_id.empty?
+            set(:docker_build_image_id, docker_build_image_id)
+            break
+          end
         end
       end
-      unless fetch(:docker_build_image_id)
-        fatal 'unable to discern image id'
-        raise 'missing image id'
+    else
+      on roles(:docker_build).first do # |buildremote|
+        docker_build_image_tags.each do |image_tag|
+          docker_build_image_id = capture docker_cmd, :image, :ls, '-q', image_tag
+          unless docker_build_image_id.empty?
+            set(:docker_build_image_id, docker_build_image_id)
+            break
+          end
+        end
       end
+    end
+
+
+
+    unless fetch(:docker_build_image_id)
+      fatal 'unable to discern image id'
+      raise 'missing image id'
     end
   end
 
@@ -308,7 +322,7 @@ namespace :docker do
       docker_build_image_tags.each do |local_tag|
         repo_tag = docker_repo_tag(local_tag)
         next unless repo_tag
-        run_locally do
+        on roles(:docker_build).first do # |buildremote|
           execute docker_cmd, :tag,
                   fetch(:docker_build_image_id),
                   repo_tag
