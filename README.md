@@ -1,3 +1,7 @@
+# CAVEAT EMPTOR
+
+This is very much a work in progress. It mostly works for my needs, but I'm finding and fixing issues almost every week. Ruthless criticism is currently encouraged. Please submit your bitchiness to: (/dev/null; cc: [github_issue](https://github.com/eshork/capistrano_dockerbuild/issues/new)). 🌮
+
 # capistrano_dockerbuild
 
 Docker image creation, tagging, and repository tasks for Capistrano v3
